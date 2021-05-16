@@ -1,0 +1,15 @@
+title = "Throttler server configuration"
+
+[defaults]
+max_parallel = 12 # total global limit of parallel processes
+priority = 100    # higher priority comes first
+
+[groups]
+
+[groups.compile]
+max_parallel = 12
+priority =     50 # higher priority is always scheduled before lower priority
+
+[groups.link]
+max_parallel = 4  # no more than 4 concurrent linking processes
+priority = 200    # have a higher priority than compile
