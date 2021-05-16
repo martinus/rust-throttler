@@ -2,10 +2,10 @@ extern crate clap;
 use clap::{App, Arg, SubCommand};
 //use std::process::Command;
 
+mod client;
 mod server;
 
 // arguments:
-// throttler -g groupname -- gcc ...
 fn main() {
     let matches = App::new("throttler")
         .version("0.1")
@@ -56,14 +56,14 @@ fn main() {
             server::run();
         }
         Some("run") => {
-            println!("rrrrrrunning");
+            client::run();
         }
         _ => {}
     }
 
     // gets a value for config if supplied by user, or defaults to "default.conf"
-    let config = matches.value_of("config").unwrap();
-    println!("{:?}", config);
+    //let config = matches.value_of("config").unwrap();
+    println!("{:?}", matches);
 
     /*
     println!("group: {:?}", matches.value_of("group").unwrap());
