@@ -1,6 +1,5 @@
 extern crate clap;
 use clap::{App, Arg, SubCommand};
-//use std::process::Command;
 
 mod client;
 mod server;
@@ -59,7 +58,9 @@ fn main() {
             server::run(port, sub);
         }
         ("run", Some(sub)) => {
-            client::run(port, sub);
+            let ecode = client::run(port, sub);
+            std::process::exit(ecode.code().unwrap_or(0));
+
         }
         _ => {}
     }
