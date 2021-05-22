@@ -1,3 +1,3 @@
-pub fn run() {
-    println!("running client");
+pub fn run(port: u16, matches: &clap::ArgMatches) {
+    println!("running client on port {}: {:?}", port, matches);
 }

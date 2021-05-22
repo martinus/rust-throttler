@@ -51,19 +51,22 @@ fn main() {
         )
         .get_matches();
 
-    match matches.subcommand_name() {
-        Some("server") => {
-            server::run();
+    // TODO how to properly handle parse errors?
+    let port = matches.value_of("port").unwrap().parse::<u16>().unwrap();
+
+    match matches.subcommand() {
+        ("server", Some(sub)) => {
+            server::run(port, sub);
         }
-        Some("run") => {
-            client::run();
+        ("run", Some(sub)) => {
+            client::run(port, sub);
         }
         _ => {}
     }
 
     // gets a value for config if supplied by user, or defaults to "default.conf"
     //let config = matches.value_of("config").unwrap();
-    println!("{:?}", matches);
+    //println!("{:?}", matches);
 
     /*
     println!("group: {:?}", matches.value_of("group").unwrap());
