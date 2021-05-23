@@ -25,7 +25,7 @@ pub fn run(port: u16, matches: &clap::ArgMatches) -> std::process::ExitStatus {
         .args(&args)
         .spawn()
         .expect("failed to execute child");
-
+        
     println!("program={:?}, args={:?}", program, &args);
     println!("running client on port {}: {:?}", port, matches);
 
