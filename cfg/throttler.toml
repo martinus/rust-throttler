@@ -1,10 +1,10 @@
 title = "Throttler server configuration"
 
-[defaults]
+[groups]
+
+[groups.default]
 max_parallel = 12 # total global limit of parallel processes
 priority = 100    # higher priority comes first
-
-[groups]
 
 [groups.compile]
 max_parallel = 12

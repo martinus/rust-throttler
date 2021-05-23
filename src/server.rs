@@ -1,7 +1,9 @@
+use serde::Deserialize;
+use std::collections::HashMap;
+use std::fs::File;
 use std::io::prelude::*;
 use std::net::{SocketAddr, TcpListener, TcpStream};
 use std::str;
-use std::time;
 
 fn handle_client(mut stream: TcpStream) {
     println!("New connection: {}", stream.peer_addr().unwrap());
@@ -20,7 +22,31 @@ fn handle_client(mut stream: TcpStream) {
     stream.read(&mut data).unwrap();
 }
 
+#[derive(Deserialize, Debug)]
+struct Throttling {
+    max_parallel: u16,
+    priority: i64,
+}
+
+#[derive(Deserialize, Debug)]
+struct Config {
+    title: String,
+    groups: HashMap<String, Throttling>,
+}
+
 pub fn run(port: u16, matches: &clap::ArgMatches) {
+    let cfg_file = matches.value_of("cfg").unwrap();
+    println!("cfg_file={:?}", cfg_file);
+
+    let mut s = String::new();
+    File::open(cfg_file)
+        .unwrap()
+        .read_to_string(&mut s)
+        .unwrap();
+    let cfg: Config = toml::from_str(&s).unwrap();
+    println!("cfg={:?}", cfg);
+
+    // locate configuration from ~/.config/
     println!("running server on port {}: {:?}", port, matches);
     let addr = SocketAddr::from(([127, 0, 0, 1], port));
     let listener = TcpListener::bind(addr).unwrap();

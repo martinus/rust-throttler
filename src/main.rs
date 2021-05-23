@@ -6,6 +6,7 @@ mod server;
 
 // arguments:
 fn main() {
+    let default_config_path = format!("{}/.throttler.toml", std::env::var("HOME").unwrap());
     let matches = App::new("throttler")
         .version("0.1")
         .author("Martin Ankerl <martin.ankerl@gmail.com>")
@@ -45,7 +46,7 @@ fn main() {
                         .short("c")
                         .long("config")
                         .value_name("FILE")
-                        .default_value("~/.throttler.toml"),
+                        .default_value(default_config_path.as_str()),
                 ),
         )
         .get_matches();
@@ -60,7 +61,6 @@ fn main() {
         ("run", Some(sub)) => {
             let ecode = client::run(port, sub);
             std::process::exit(ecode.code().unwrap_or(0));
-
         }
         _ => {}
     }
