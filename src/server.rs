@@ -32,8 +32,9 @@ struct Throttling {
 
 #[derive(Deserialize, Debug)]
 struct Config {
-    title: String,
-    groups: HashMap<String, Throttling>,
+    num_threads: usize,
+    default_priority: i64,
+    group: HashMap<String, Throttling>,
 }
 
 pub fn run(port: u16, matches: &clap::ArgMatches) {
@@ -54,9 +55,8 @@ pub fn run(port: u16, matches: &clap::ArgMatches) {
     let listener = TcpListener::bind(addr).unwrap();
 
     // create a thread pool with the number of elements we have in "default" section
-    let num_threads = cfg.groups.get("default").unwrap().max_parallel;
-    let pool = ThreadPool::new(num_threads);
-    println!("num_threads={:?}", num_threads);
+    let pool = ThreadPool::new(cfg.num_threads);
+    println!("num_threads={:?}", cfg.num_threads);
 
     for stream in listener.incoming() {
         let stream = stream.unwrap();
