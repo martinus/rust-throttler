@@ -3,6 +3,7 @@ use clap::{App, Arg, SubCommand};
 
 mod client;
 mod server;
+mod thread_pool;
 
 // arguments:
 fn main() {

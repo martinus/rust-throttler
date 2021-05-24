@@ -5,6 +5,8 @@ use std::io::prelude::*;
 use std::net::{SocketAddr, TcpListener, TcpStream};
 use std::str;
 
+use crate::thread_pool::ThreadPool;
+
 fn handle_client(mut stream: TcpStream) {
     println!("New connection: {}", stream.peer_addr().unwrap());
 
@@ -24,7 +26,7 @@ fn handle_client(mut stream: TcpStream) {
 
 #[derive(Deserialize, Debug)]
 struct Throttling {
-    max_parallel: u16,
+    max_parallel: usize,
     priority: i64,
 }
 
@@ -51,7 +53,16 @@ pub fn run(port: u16, matches: &clap::ArgMatches) {
     let addr = SocketAddr::from(([127, 0, 0, 1], port));
     let listener = TcpListener::bind(addr).unwrap();
 
+    // create a thread pool with the number of elements we have in "default" section
+    let num_threads = cfg.groups.get("default").unwrap().max_parallel;
+    let pool = ThreadPool::new(num_threads);
+    println!("num_threads={:?}", num_threads);
+
     for stream in listener.incoming() {
-        handle_client(stream.unwrap());
+        let stream = stream.unwrap();
+
+        pool.execute(|| {
+            handle_client(stream);
+        });
     }
 }

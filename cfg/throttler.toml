@@ -3,6 +3,7 @@ title = "Throttler server configuration"
 [groups]
 
 [groups.default]
+# mandatory group that's used when no other group is found.
 max_parallel = 12 # total global limit of parallel processes
 priority = 100    # higher priority comes first
 
